@@ -2,28 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-/* The professional utilitarian palette */
 :root {
-  --background: #fdfdfe; /* Almost pure white, slightly blue tint for focus */
-  --foreground: #111827; /* Gray 900 */
+  --background: #f8fafc; /* Very light slate */
+  --foreground: #0f172a; /* Deep slate */
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
-  /* A refined font stack focussed on clarity for numbers */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  letter-spacing: -0.011em; /* Subtle tightening for headers */
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Clearer text selection color */
-::selection {
-  background-color: #dbeafe; /* Blue 100 */
-  color: #1e3a8a; /* Blue 900 */
+/* Hide UI elements when exporting to PDF via Print */
+@media print {
+  body { background-color: white; }
+  .no-print { display: none !important; }
+  .print-break-inside-avoid { break-inside: avoid; }
+  .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; border: 1px solid #e2e8f0; }
 }
 
-/* Focused focus rings for accessibility */
-:focus-visible {
-  outline: 2px solid #4f46e5; /* Indigo 600 */
-  outline-offset: 2px;
-}
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
