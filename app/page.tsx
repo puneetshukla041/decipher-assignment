@@ -3,13 +3,13 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useFinancials } from '@/context/FinancialContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { AlertCircle,Loader2, Download, TrendingUp, TrendingDown, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
+import { Loader2, Download, TrendingUp, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
 import SearchBar from '@/components/SearchBar';
 import HeroSection from '@/components/HeroSection';
 import ErrorBanner from '@/components/ErrorBanner';
 import MetricHighlight from '@/components/MetricHighlight';
-import { extractFinancialData, buildFinancialCSV, type MetricName, type MetricRow } from '@/lib/financial';
+import { extractFinancialData, buildFinancialCSV, type MetricName } from '@/lib/financial';
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState('');
