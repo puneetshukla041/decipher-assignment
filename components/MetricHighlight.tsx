@@ -1,10 +1,10 @@
-import { Icon } from 'lucide-react';
+import type { ComponentType, SVGProps } from 'react';
 
 type MetricHighlightProps = {
   title: string;
   value: number;
   previousValue?: number | null;
-  icon: Icon;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
   prefix?: string;
   suffix?: string;
 };

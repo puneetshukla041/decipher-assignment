@@ -3,56 +3,20 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useFinancials } from '@/context/FinancialContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { AlertCircle,Search, Loader2, Download, TrendingUp, TrendingDown, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
+import { AlertCircle,Loader2, Download, TrendingUp, TrendingDown, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
-
-// --- ROBUST SEC DATA PARSER ---
-// Companies use different GAAP tags. This function hunts for the correct one.
-const extractFinancialData = (data: any, metric: string, yearsBack: number) => {
-  if (!data?.facts?.['us-gaap']) return [];
-  
-  const metricMap: Record<string, string[]> = {
-    'Revenue': ['Revenues', 'SalesRevenueNet', 'RevenueFromContractWithCustomerExcludingAssessedTax'],
-    'Net Income': ['NetIncomeLoss'],
-    'Assets': ['Assets'],
-    'Liabilities': ['Liabilities']
-  };
-
-  const possibleKeys = metricMap[metric];
-  let rawUnits = null;
-
-  for (const key of possibleKeys) {
-    if (data.facts['us-gaap'][key]?.units?.USD) {
-      rawUnits = data.facts['us-gaap'][key].units.USD;
-      break;
-    }
-  }
-
-  if (!rawUnits) return [];
-
-  // Filter for annual reports (10-K), map, and deduplicate years
-  const annualData = rawUnits
-    .filter((item: any) => item.form === '10-K')
-    .map((item: any) => ({
-      year: parseInt(item.fy),
-      val: item.val / 1000000 // Convert to Millions
-    }));
-
-  // Deduplicate (SEC sometimes has multiple 10-K entries per year)
-  const uniqueYears = new Map();
-  annualData.forEach((item: any) => uniqueYears.set(item.year, item.val));
-  
-  return Array.from(uniqueYears, ([year, val]) => ({ year, val }))
-    .sort((a, b) => a.year - b.year)
-    .slice(-yearsBack);
-};
+import SearchBar from '@/components/SearchBar';
+import HeroSection from '@/components/HeroSection';
+import ErrorBanner from '@/components/ErrorBanner';
+import MetricHighlight from '@/components/MetricHighlight';
+import { extractFinancialData, buildFinancialCSV, type MetricName, type MetricRow } from '@/lib/financial';
 
 export default function Home() {
   const [searchInput, setSearchInput] = useState('');
   const { data, loading, error, fetchCompanyData } = useFinancials();
   
   // Dashboard State
-  const [activeMetric, setActiveMetric] = useState('Revenue');
+  const [activeMetric, setActiveMetric] = useState<MetricName>('Revenue');
   const [timeframe, setTimeframe] = useState(5);
   const [viewType, setViewType] = useState<'chart' | 'table'>('chart');
   
@@ -104,59 +68,43 @@ export default function Home() {
   };
 
   const exportCSV = () => {
-    if (!chartData.length) return;
-    const csvContent = "Year,Value (Millions USD)\n" + 
-      chartData.map(row => `${row.year},${row.val}`).join("\n");
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+    if (!chartData.length || !data) return;
+    const csvContent = buildFinancialCSV(chartData);
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
     saveAs(blob, `${data.entityName.replace(/\s+/g, '_')}_${activeMetric}.csv`);
   };
 
   return (
     <main className="min-h-screen bg-slate-50 font-sans pb-20">
-      {/* Dynamic Navigation/Header */}
-      <nav className={`w-full transition-all duration-500 ${hasData ? 'bg-white border-b border-slate-200 py-4 sticky top-0 z-50 shadow-sm no-print' : 'pt-32 pb-12'}`}>
-        <div className={`max-w-6xl mx-auto px-6 flex ${hasData ? 'flex-row items-center justify-between gap-8' : 'flex-col items-center text-center'}`}>
-          
-          {/* Title Area */}
-          <div className={hasData ? 'hidden md:block' : 'mb-10'}>
-            <h1 className={`font-semibold tracking-tight text-slate-900 ${hasData ? 'text-xl' : 'text-5xl mb-4'}`}>
-              Financial Explorer
-            </h1>
-            {!hasData && <p className="text-slate-500 text-lg max-w-lg mx-auto">High-fidelity SEC EDGAR financial analysis. Search any CIK to begin.</p>}
+      {hasData && (
+        <nav className="w-full bg-white border-b border-slate-200 py-4 sticky top-0 z-50 shadow-sm no-print">
+          <div className="max-w-6xl mx-auto px-6 flex items-center justify-between gap-8">
+            <div className="flex items-center gap-3">
+              <span className="h-10 w-10 grid place-items-center rounded-2xl bg-slate-900 text-white font-bold">F</span>
+              <div>
+                <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Financial Explorer</p>
+                <h1 className="text-lg font-semibold text-slate-900">SEC company insights</h1>
+              </div>
+            </div>
+            <div className="w-full max-w-xl">
+              <SearchBar input={searchInput} setInput={setSearchInput} handleSearch={handleSearch} loading={loading} compact />
+            </div>
           </div>
+        </nav>
+      )}
 
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className={`relative ${hasData ? 'w-full max-w-md' : 'w-full max-w-2xl'}`}>
-            <Search className={`absolute text-slate-400 ${hasData ? 'left-4 top-2.5 h-5 w-5' : 'left-6 top-4 h-6 w-6'}`} />
-            <input
-              type="text"
-              placeholder="Enter CIK (e.g., 320193 for Apple)..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className={`w-full bg-white border border-slate-200 text-slate-900 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm ${hasData ? 'pl-12 pr-4 py-2 text-sm' : 'pl-16 pr-6 py-4 text-lg'}`}
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className={`absolute right-2 bg-slate-900 text-white rounded-full hover:bg-slate-800 transition-colors flex items-center justify-center ${hasData ? 'top-1.5 bottom-1.5 px-4 text-sm font-medium' : 'top-2 bottom-2 px-6 font-semibold'}`}
-            >
-              {loading ? <Loader2 className="animate-spin h-4 w-4" /> : 'Analyze'}
-            </button>
-          </form>
-
-        </div>
-      </nav>
-
-      {/* Main Dashboard Content */}
       <div className="max-w-6xl mx-auto px-6">
+        {!hasData && (
+          <HeroSection
+            input={searchInput}
+            setInput={setSearchInput}
+            handleSearch={handleSearch}
+            loading={loading}
+          />
+        )}
         
         {/* Error Notification */}
-        {error && (
-          <div className="mt-8 p-4 bg-red-50 text-red-700 border border-red-200 rounded-xl flex items-center gap-3 no-print">
-            <AlertCircle className="h-5 w-5" />
-            <p className="font-medium">{error}</p>
-          </div>
-        )}
+        {error && <ErrorBanner message={error} />}
 
         {hasData && (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-500 mt-10 space-y-8">
@@ -179,6 +127,17 @@ export default function Home() {
                   <Printer className="h-4 w-4" /> PDF Report
                 </button>
               </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <MetricHighlight
+                title={`${activeMetric} (Latest)`}
+                value={latestVal}
+                previousValue={prevVal}
+                icon={TrendingUp}
+                prefix="$"
+                suffix="M"
+              />
             </div>
 
             {/* --- AI INSIGHT PANEL --- */}

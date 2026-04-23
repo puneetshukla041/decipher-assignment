@@ -1,26 +1,49 @@
 import { SECCompanyFacts } from '@/types/financial';
 
-export type RevenueRow = {
-  year: string | number;
-  revenue: number;
+export type MetricName = 'Revenue' | 'Net Income' | 'Assets' | 'Liabilities';
+
+export type MetricRow = {
+  year: number;
+  val: number;
 };
 
-export function extractRevenueRows(companyData: SECCompanyFacts | null): RevenueRow[] {
-  if (!companyData?.facts?.['us-gaap']?.Revenues) {
-    return [];
+const metricKeyMap: Record<MetricName, string[]> = {
+  Revenue: ['Revenues', 'SalesRevenueNet', 'RevenueFromContractWithCustomerExcludingAssessedTax'],
+  'Net Income': ['NetIncomeLoss'],
+  Assets: ['Assets'],
+  Liabilities: ['Liabilities'],
+};
+
+export function extractFinancialData(data: SECCompanyFacts | null, metric: MetricName, yearsBack: number): MetricRow[] {
+  if (!data?.facts?.['us-gaap']) return [];
+
+  const possibleKeys = metricKeyMap[metric];
+  let rawUnits = null;
+
+  for (const key of possibleKeys) {
+    if (data.facts['us-gaap'][key]?.units?.USD) {
+      rawUnits = data.facts['us-gaap'][key].units.USD;
+      break;
+    }
   }
 
-  const rawUnits = companyData.facts['us-gaap'].Revenues.units.USD;
+  if (!rawUnits) return [];
 
-  return rawUnits
-    .filter((item) => item.form === '10-K')
-    .map((item) => ({
-      year: item.fy,
-      revenue: item.val / 1_000_000,
-    }))
-    .slice(-5);
+  const annualData = rawUnits
+    .filter((item: any) => item.form === '10-K')
+    .map((item: any) => ({
+      year: Number(item.fy),
+      val: item.val / 1_000_000,
+    }));
+
+  const uniqueYears = new Map<number, number>();
+  annualData.forEach((item) => uniqueYears.set(item.year, item.val));
+
+  return Array.from(uniqueYears, ([year, val]) => ({ year, val }))
+    .sort((a, b) => a.year - b.year)
+    .slice(-yearsBack);
 }
 
-export function buildRevenueCSV(data: RevenueRow[]): string {
-  return ['Year,Revenue (Millions USD)', ...data.map((row) => `${row.year},${row.revenue}`)].join('\n');
+export function buildFinancialCSV(rows: MetricRow[]): string {
+  return ['Year,Value (Millions USD)', ...rows.map((row) => `${row.year},${row.val}`)].join('\n');
 }
