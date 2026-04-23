@@ -1,11 +1,12 @@
 'use client';
 
+import type { FormEvent } from 'react';
 import { Search, Loader2 } from 'lucide-react';
 
 type SearchBarProps = {
   input: string;
   setInput: (value: string) => void;
-  handleSearch: (event: React.FormEvent<HTMLFormElement>) => void;
+  handleSearch: (event: FormEvent<HTMLFormElement>) => void;
   loading: boolean;
   compact?: boolean;
 };
