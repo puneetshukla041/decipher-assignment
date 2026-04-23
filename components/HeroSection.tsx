@@ -12,7 +12,7 @@ export default function HeroSection({ input, setInput, handleSearch, loading }: 
     <header className="animate-in fade-in duration-500 flex flex-col items-center mb-12 mt-20">
       <div className="w-full max-w-2xl bg-white p-16 rounded-[3rem] border border-gray-100 shadow-[0_30px_90px_-20px_rgba(79,70,229,0.06)] flex flex-col items-center text-center">
         <div className="inline-flex items-center justify-center p-4 bg-indigo-50 rounded-3xl mb-8 border border-indigo-100">
-          <span className="text-indigo-600 text-3xl">📈</span>
+          <span className="text-indigo-600 text-3xl"></span>
         </div>
         <h1 className="text-5xl md:text-6xl font-semibold tracking-tighter text-gray-950 mb-4">
           Financial Explorer
