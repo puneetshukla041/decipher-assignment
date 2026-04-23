@@ -34,7 +34,11 @@ export default function Home() {
 
   const exportCSV = () => {
     if (!chartData.length) return;
-    const csvContent = "Year,Revenue (Millions USD)\n" + chartData.map(row => `${row.year},${row.revenue}`).join("\n");
+    
+    // FIXED: Explicitly typed 'row' to resolve the TypeScript "implicit any" error
+    const csvContent = "Year,Revenue (Millions USD)\n" + 
+      chartData.map((row: { year: string | number; revenue: number }) => `${row.year},${row.revenue}`).join("\n");
+      
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
     saveAs(blob, `${data.entityName || 'company'}_revenues.csv`);
   };
