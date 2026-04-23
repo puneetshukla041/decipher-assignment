@@ -86,7 +86,7 @@ export default function DataDashboard({ data, chartData, exportCSV }: DataDashbo
                   }}
                   itemStyle={{ color: '#000', fontSize: '15px' }}
                   labelStyle={{ color: '#6B7280', fontWeight: 500, fontSize: '13px', marginBottom: '4px' }}
-                  formatter={(value: number | undefined) => value !== undefined ? [`$${value.toFixed(1)} Million`, 'Revenue'] : ['N/A', 'Revenue']}
+                  formatter={(value: any) => value !== undefined ? [`$${Number(value).toFixed(1)} Million`, 'Revenue'] : ['N/A', 'Revenue']}
                 />
                 <Line
                   type="natural"
