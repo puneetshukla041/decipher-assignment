@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useFinancials } from '@/context/FinancialContext';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Search, Loader2, Download, TrendingUp, TrendingDown, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
+import { AlertCircle,Search, Loader2, Download, TrendingUp, TrendingDown, Activity, Table as TableIcon, BarChart2, BrainCircuit, Printer } from 'lucide-react';
 import { saveAs } from 'file-saver';
 
 // --- ROBUST SEC DATA PARSER ---
