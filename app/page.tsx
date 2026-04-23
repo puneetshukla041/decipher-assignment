@@ -37,7 +37,7 @@ export default function Home() {
 
   // Fetch AI Summary when data changes
   useEffect(() => {
-    if (chartData.length > 0) {
+    if (chartData.length > 0 && data) {
       const getSummary = async () => {
         setIsAiLoading(true);
         try {
@@ -158,7 +158,7 @@ export default function Home() {
             {/* --- CONTROLS ROW --- */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 bg-white p-2 rounded-xl border border-slate-200 shadow-sm no-print">
               <div className="flex w-full md:w-auto overflow-x-auto hide-scrollbar">
-                {['Revenue', 'Net Income', 'Assets', 'Liabilities'].map(metric => (
+                {(['Revenue', 'Net Income', 'Assets', 'Liabilities'] as const).map(metric => (
                   <button
                     key={metric}
                     onClick={() => setActiveMetric(metric)}
