@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Financial Explorer
+
+A production-ready Next.js app for exploring SEC EDGAR company financial data.
 
 ## Getting Started
 
