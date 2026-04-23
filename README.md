@@ -2,18 +2,18 @@
 
 A modern, production-ready web application for exploring and analyzing SEC EDGAR company financial data. Built with Next.js 16, TypeScript, and Tailwind CSS, featuring real-time data visualization, AI-powered insights, and comprehensive financial metrics.
 
-## 🚀 Features
+## Features
 
-- **SEC EDGAR Integration**: Direct access to verified SEC filing data
-- **Real-time Search**: Search companies by CIK (Central Index Key)
-- **Multi-metric Analysis**: Revenue, Net Income, Assets, and Liabilities
-- **Interactive Charts**: Bar charts and line graphs with Recharts
-- **AI-Powered Insights**: Automated financial analysis summaries
-- **Data Export**: CSV export functionality for financial data
-- **Responsive Design**: Mobile-first design with Tailwind CSS
-- **Type-Safe**: Full TypeScript implementation with strict typing
+- SEC EDGAR Integration: Direct access to verified SEC filing data
+- Real-time Search: Search companies by CIK (Central Index Key)
+- Multi-metric Analysis: Revenue, Net Income, Assets, and Liabilities
+- Interactive Charts: Bar charts and line graphs with Recharts
+- AI-Powered Insights: Automated financial analysis summaries
+- Data Export: CSV export functionality for financial data
+- Responsive Design: Mobile-first design with Tailwind CSS
+- Type-Safe: Full TypeScript implementation with strict typing
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```mermaid
 graph TB
@@ -45,7 +45,7 @@ graph TB
     style E fill:#fff3e0
 ```
 
-## 🔄 Application Flow
+## Application Flow
 
 ```mermaid
 sequenceDiagram
@@ -68,7 +68,7 @@ sequenceDiagram
     FE-->>U: Download financial data
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 financial-explorer/
@@ -100,28 +100,28 @@ financial-explorer/
 └── package.json                 # Dependencies and scripts
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **State Management**: React Context API
+- Framework: Next.js 16 (App Router)
+- Language: TypeScript
+- Styling: Tailwind CSS
+- Charts: Recharts
+- Icons: Lucide React
+- State Management: React Context API
 
 ### Backend
-- **API Routes**: Next.js API Routes
-- **External APIs**: SEC EDGAR API
-- **Data Processing**: Custom utility functions
+- API Routes: Next.js API Routes
+- External APIs: SEC EDGAR API
+- Data Processing: Custom utility functions
 
 ### Development Tools
-- **Linting**: ESLint
-- **Type Checking**: TypeScript
-- **Build Tool**: Next.js (Turbopack)
-- **Package Manager**: npm
+- Linting: ESLint
+- Type Checking: TypeScript
+- Build Tool: Next.js (Turbopack)
+- Package Manager: npm
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -130,67 +130,67 @@ financial-explorer/
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone the repository
    ```bash
    git clone <repository-url>
    cd financial-explorer
    ```
 
-2. **Install dependencies**
+2. Install dependencies
    ```bash
    npm install
    ```
 
-3. **Environment Setup** (Optional)
+3. Environment Setup (Optional)
    ```bash
    # Create .env.local for custom SEC User-Agent
    echo "SEC_EDGAR_USER_AGENT=Your Name (your.email@example.com)" > .env.local
    ```
 
-4. **Run development server**
+4. Run development server
    ```bash
    npm run dev
    ```
 
-5. **Open in browser**
+5. Open in browser
    ```
    http://localhost:3000
    ```
 
-## 📖 Usage
+## Usage
 
 ### Searching for Companies
 
 1. Enter a CIK (Central Index Key) in the search bar
 2. Popular examples:
-   - Apple Inc.: `320193`
-   - Microsoft Corporation: `789019`
-   - Tesla, Inc.: `1318605`
+   - Apple Inc.: 320193
+   - Microsoft Corporation: 789019
+   - Tesla, Inc.: 1318605
 
 ### Exploring Financial Data
 
-1. **View Metrics**: Switch between Revenue, Net Income, Assets, and Liabilities
-2. **Time Range**: Select 5 years, 10 years, or maximum available history
-3. **Visualization**: Toggle between chart and table views
-4. **AI Insights**: View automated financial analysis summaries
+1. View Metrics: Switch between Revenue, Net Income, Assets, and Liabilities
+2. Time Range: Select 5 years, 10 years, or maximum available history
+3. Visualization: Toggle between chart and table views
+4. AI Insights: View automated financial analysis summaries
 
 ### Exporting Data
 
 - Click "CSV" button to download financial data as CSV file
 - Click "PDF Report" to generate a printable report
 
-## 🔧 API Reference
+## API Reference
 
 ### SEC Data Endpoint
 
-**GET** `/api/sec?cik={cik}`
+GET /api/sec?cik={cik}
 
 Fetches company financial data from SEC EDGAR.
 
-**Parameters:**
-- `cik` (string, required): Company CIK (10-digit, zero-padded)
+Parameters:
+- cik (string, required): Company CIK (10-digit, zero-padded)
 
-**Response:**
+Response:
 ```json
 {
   "entityName": "Apple Inc.",
@@ -215,11 +215,11 @@ Fetches company financial data from SEC EDGAR.
 
 ### AI Summary Endpoint
 
-**POST** `/api/summarize`
+POST /api/summarize
 
 Generates AI-powered financial analysis.
 
-**Request Body:**
+Request Body:
 ```json
 {
   "entityName": "Apple Inc.",
@@ -229,41 +229,41 @@ Generates AI-powered financial analysis.
 }
 ```
 
-**Response:**
+Response:
 ```json
 {
   "summary": "Apple Inc. shows a 4.8% increase in revenue year-over-year..."
 }
 ```
 
-## 🎨 Component Architecture
+## Component Architecture
 
 ### Core Components
 
-- **SearchBar**: Handles CIK input and search functionality
-- **HeroSection**: Landing page with main search interface
-- **DataDashboard**: Main visualization component with charts and metrics
-- **MetricHighlight**: Individual KPI display cards
-- **ErrorBanner**: Error state display component
+- SearchBar: Handles CIK input and search functionality
+- HeroSection: Landing page with main search interface
+- DataDashboard: Main visualization component with charts and metrics
+- MetricHighlight: Individual KPI display cards
+- ErrorBanner: Error state display component
 
 ### Context Providers
 
-- **FinancialContext**: Manages global financial data state
+- FinancialContext: Manages global financial data state
 - Provides loading states, error handling, and data fetching
 
 ### Utility Libraries
 
-- **financial.ts**: Data processing and transformation functions
-- **sec.ts**: SEC API URL construction and configuration
+- financial.ts: Data processing and transformation functions
+- sec.ts: SEC API URL construction and configuration
 
-## 🔒 Security & Compliance
+## Security & Compliance
 
-- **SEC Compliance**: Proper User-Agent headers for SEC EDGAR API
-- **Rate Limiting**: Built-in caching to respect SEC API limits
-- **Data Validation**: TypeScript ensures data integrity
-- **Error Handling**: Comprehensive error boundaries and fallbacks
+- SEC Compliance: Proper User-Agent headers for SEC EDGAR API
+- Rate Limiting: Built-in caching to respect SEC API limits
+- Data Validation: TypeScript ensures data integrity
+- Error Handling: Comprehensive error boundaries and fallbacks
 
-## 🚀 Deployment
+## Deployment
 
 ### Vercel (Recommended)
 
@@ -294,12 +294,12 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
+2. Create a feature branch: git checkout -b feature/amazing-feature
+3. Commit changes: git commit -m 'Add amazing feature'
+4. Push to branch: git push origin feature/amazing-feature
 5. Open a Pull Request
 
 ### Development Guidelines
@@ -310,24 +310,22 @@ CMD ["npm", "start"]
 - Test components and utilities
 - Update documentation for API changes
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - SEC EDGAR API for financial data access
 - Next.js team for the excellent framework
 - Recharts for data visualization components
 - Tailwind CSS for utility-first styling
 
-## 📞 Support
+## Support
 
 For questions or issues:
 - Open an issue on GitHub
-- Check the [Next.js documentation](https://nextjs.org/docs)
+- Check the Next.js documentation
 - Review SEC EDGAR API documentation
 
----
-
-**Built with ❤️ using Next.js, TypeScript, and modern web technologies**
+Built with Next.js, TypeScript, and modern web technologies.
